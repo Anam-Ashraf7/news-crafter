@@ -4,7 +4,7 @@ const language =document.getElementById("languages")
 const date=document.getElementById("date")
 
 let arr = []
-function next() {
+async function next() {
   const category=document.getElementById("input")
   const date = document.getElementById("date")
 const container=document.getElementById("container")
@@ -54,6 +54,7 @@ let arr = []
           let title = document.getElementsByClassName("title")[i]
           let content = document.getElementsByClassName("content")[i]
           // genpromptandspeech(title.innerText,content.innerText)
+          displayVideo(title.innerText,content.innerText)
         });
 
         container.append(getArticle);
@@ -65,6 +66,12 @@ let arr = []
   .catch(error => {
     console.error('Error fetching news:', error);
   });
+}
+
+async function displayVideo(title,content){
+  await translateText(content,language.value)
+  await imageGenerate(title)
+  await videoGenerator()
 }
 
 
@@ -167,8 +174,8 @@ async function imageGenerate(prompt) {
 
 async function videoGenerator() {
   const data = {
-    images: ['assets/image_0.jpg', 'assets/image_1.jpg','assets/image_2.jpg','assets/image_3.jpg','assets/image_4.jpg'],
-    audio: 'assets/output.mp3',
+    images: ['image_0.jpg', 'image_1.jpg','image_2.jpg','image_3.jpg','image_4.jpg'],
+    audio: 'output.mp3',
   };
 
   const options = {

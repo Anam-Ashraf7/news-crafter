@@ -18,7 +18,7 @@ async def translate_text(to_translate, target_language):
 
 async def text_to_speech(text, language):
     tts = gTTS(text=text, lang=language, tld="com", slow=False)
-    tts.save("assets/audio.mp3")
+    tts.save("audio.mp3")
     return
 
 async def create_video(images, audio_file, output_file, fps=1):
@@ -33,6 +33,7 @@ async def create_video(images, audio_file, output_file, fps=1):
 
 @app.route('/translate_text', methods=['POST', 'GET'])
 async def translate_text_handler():
+    print("Keyword generating")
     # call_count = 0
     # max_count = 1
     try:
@@ -73,41 +74,44 @@ async def translate_text_handler():
 #         return jsonify({'error': str(e)}), 500
 
 
-# @app.route('/generate_image', methods=['POST', 'GET'])
-# async def generate_image():
-#     try:
-#         data = request.get_json()
-#         prompt = data.get('prompt')
+@app.route('/generate_image', methods=['POST', 'GET'])
+async def generate_image():
+    print("Image generating")
+    try:
+        data = request.get_json()
+        prompt = data.get('prompt')
 
-#         res = get_response(prompt)
-#         res = res.split("\n")
+        res = get_response(prompt)
+        res = res.split("\n")
 
-#         images = []
+        images = []
 
-#         for i in range(len(res)):
-#             image = create_image(res[i])
-#             images.append(image)
+        for i in range(len(res)):
+            image = create_image(res[i])
+            print(image)
+            images.append(image)
 
-#         for i in range(len(images)):
-#             url = images[i]
-#             response = requests.get(url)
+        for i in range(len(images)):
+            url = images[i]
+            response = requests.get(url)
 
-#             with open(f"assets/image_{i}.jpg", "wb") as f:
-#                 f.write(response.content)
+            with open(f"image_{i}.jpg", "wb") as f:
+                f.write(response.content)
 
-#         return jsonify({'result': res})
-#     except Exception as e:
-#         return jsonify({'error': str(e)}), 500
+        return jsonify({'result': res})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 
 @app.route('/generate_video', methods=['POST', 'GET'])
 async def generate_video():
+    print("Video generating")
     try:
         data = request.get_json()
         images_list = data.get('images')
         audio_file = data.get('audio')
-        output_file = 'assets/output_video.mp4'
+        output_file = 'output_video.mp4'
 
         print("started")
 
